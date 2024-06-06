@@ -1,1 +1,1 @@
-# Repositório com a configuração inicial de Terraform
+# Configuração automática do Terraform
