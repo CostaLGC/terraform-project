@@ -1,1 +1,1 @@
-# terraform-project
+# Repositório contendo a configuração inicial de Terraform
