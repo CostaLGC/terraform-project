@@ -1,1 +1,1 @@
-# Configuração automática do Terraform
+# Configuração do Terraform
