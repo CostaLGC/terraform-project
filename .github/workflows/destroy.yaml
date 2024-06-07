@@ -1,0 +1,39 @@
+name: Terraform Destroy
+
+on:
+  workflow_dispatch:  # Adiciona o gatilho manual
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_VERSION: "1.0.11"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Terraform Init
+        run: terraform init
+ 
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Push to another repository
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo .terraform/* > .gitignore
+          echo destroy >> output.txt
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${SSH_PRIVATE_KEY}"
+          git remote add 1 git@github.com:costalgc/1.git
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add .
+          git commit -m "Terraform TF State via GitHub Actions"
+          git push 1 main 
